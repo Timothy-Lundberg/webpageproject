@@ -6,12 +6,6 @@ from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 
 
-posts = {
-    "author": {'username': 'Andres'},
-    "body": "hejhej",
-    }
-
-
 @app.route('/')
 @app.route('/index')
 @login_required
@@ -43,7 +37,7 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route("register", methods=["GET", "POST"])
+@app.route("/register", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for("index"))
