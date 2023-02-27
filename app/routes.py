@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request
-from app import app
+from app import app, db
 from app.forms import LoginForm, RegistrationForm
 from app.models import User
 from flask_login import current_user, login_user, logout_user, login_required
@@ -10,7 +10,7 @@ from werkzeug.urls import url_parse
 @app.route('/index')
 @login_required
 def index():
-    return render_template("index.html", title="Home Page", posts=posts)
+    return render_template("index.html", title="Home Page")
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -19,6 +19,7 @@ def login():
         return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
+        #  Kollar om användaren har skrivit in korrekt lösenord motsvarande till sitt användarnamn.
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
@@ -39,6 +40,8 @@ def logout():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """ Registrerar användaren """
+    # Om användaren är inloggad omdirigeras man till index.
     if current_user.is_authenticated:
         return redirect(url_for("index"))
     form = RegistrationForm()
@@ -47,7 +50,7 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Congratulations, you are now a real daddy!')
+        flash('Congratulations, you are now a proud member of TBD')
         return redirect(url_for("login"))
     return render_template("register.html", title="Register", form=form)
 
