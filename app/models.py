@@ -17,6 +17,7 @@ class User(UserMixin, db.Model):
         return '<User {}>'.format(self.username)
 
     def set_password(self, password):
+        """Här hashas lösenordet"""
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
@@ -25,6 +26,8 @@ class User(UserMixin, db.Model):
 
 
 class Post(db.Model):
+    """Sätter SQL-kolumner för hur vi ska spara användarens inlägg i databasen"""
+
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)

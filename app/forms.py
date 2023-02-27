@@ -14,6 +14,8 @@ class LoginForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
+    """Den här klassen skapar en mall för våra registreringsuppgifter"""
+
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=3, max=32)])

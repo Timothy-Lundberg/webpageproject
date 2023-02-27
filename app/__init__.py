@@ -4,7 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 
+# Vi skapar ett Flask-objekt med "denna filen" som input
 app = Flask(__name__)
+# Vi skickar med Config-klassen som input för att sätta inställningar.
 app.config.from_object(Config)
 # Skapar en databas och döper den till db.
 db = SQLAlchemy(app)
