@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from hashlib import md5
 
+
 class User(UserMixin, db.Model):
     """Sätter SQL-kolumner för hur vi ska spara våra användare i databasen"""
 
@@ -37,6 +38,7 @@ class Post(db.Model):
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    page = db.Column(db.Integer)
 
     def __repr__(self):
         return "Post {}".format(self.body)
