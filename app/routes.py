@@ -1,9 +1,11 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm
-from app.models import User
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm
+from app.models import User, Post
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
+from app.joke_api import print_joke
+import asyncio
 
 
 @app.route('/')
@@ -64,15 +66,35 @@ def register():
     return render_template("register.html", title="Register", form=form)
 
 
-@app.route("/user/<username>")
+@app.route("/user/<user_id>", methods=["GET", "POST"])
 @login_required
-def user(username):
-    user = User.query.filter_by(username=username).first_or_404()
-    posts = [
-        {'author': user, 'body': 'Test post #1'},
-        {'author': user, 'body': 'Test post #2'}
-    ]
-    return render_template("user.html", user=user, posts=posts)
+def user(user_id):
+    user = User.query.filter_by(id=user_id).first_or_404()
+    posts = Post.query.filter_by(page=user.id).all()
+
+    post_list = []
+    for post in posts:
+        poster_id = post.user_id
+        poster = User.query.filter_by(id=poster_id).first_or_404()
+        new_post = {
+            'poster': poster.username,
+            'body': post.body,
+            'avatar': poster,
+            'id': poster_id
+        }
+        post_list.append(new_post)
+
+
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(page=user.id, body=form.body.data, user_id=current_user.id)
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for("user", user_id=user.id))
+
+    # joke = asyncio.run(print_joke())
+    joke = "What did hasudhadus....."
+    return render_template("user.html", user=user, form=form, posts=post_list)
 
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
