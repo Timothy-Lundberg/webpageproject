@@ -5,13 +5,19 @@ from app.models import User, Post
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 
+
 @app.route('/')
+@app.route('/index')
+def index():
+    return render_template('index.html')
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """ Loggar in användaren """
     # Om användaren är inloggad omdirigeras man till index.
     if current_user.is_authenticated:
-        return redirect(url_for('user', user_id=current_user.id))
+        return redirect(url_for('index'))
     # Om användaren inte är inloggad.
     form = LoginForm()
     # Här kollar man fall inloggning blivit godkänd.
@@ -25,7 +31,7 @@ def login():
         # next_page sparas för att omredigera användaren vidare efter lyckad inloggning om det finns en next.
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('user', user_id=current_user.id)
+            next_page = url_for('index')
         return redirect(next_page)
     return render_template("login.html", title='Sign In', form=form)
 
@@ -42,7 +48,7 @@ def register():
     """ Registrerar användaren """
     # Om användaren är inloggad omdirigeras man till index.
     if current_user.is_authenticated:
-        return redirect(url_for('user', user_id=current_user.id))
+        return redirect(url_for('index'))
     form = RegistrationForm()
     # Om registreringen godkänns skapas en instans från User-klassen med information från vårat användarformulär
     if form.validate_on_submit():
@@ -51,8 +57,8 @@ def register():
         # Här lägger vi till den nya användaren till vår databas.
         db.session.add(user)
         db.session.commit()
-        flash('Congratulations, you are now a proud member of TBD')
-        return redirect(url_for("login"))
+        flash('Congratulations, you are now a proud member of MonsterSpace')
+        return redirect(url_for("index"))
     return render_template("register.html", title="Register", form=form)
 
 
@@ -95,7 +101,7 @@ def edit_profile():
         current_user.about_me = form.about_me.data
         db.session.commit()
         flash('Your changes have been saved.')
-        return redirect(url_for("edit_profile"))
+        return redirect(url_for("user", user_id=current_user.id))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me

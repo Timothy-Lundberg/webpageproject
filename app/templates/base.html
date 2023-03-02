@@ -10,7 +10,7 @@
     <nav class="navbar navbar-default">
     <h4>
     {% if current_user.is_anonymous %}
-<!--    <a href="{{ url_for('login') }}" style="color: black">Login</a>-->
+    <a href="{{ url_for('login') }}" style="color: black">Login</a>
     {% else %}
     <a href="{{ url_for('user', user_id=current_user.id) }}" style="color: black">My Monster</a>
     <a href="{{ url_for('logout') }}" style="color: darkorange">Logout</a>
