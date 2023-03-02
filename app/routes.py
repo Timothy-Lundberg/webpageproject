@@ -5,7 +5,7 @@ from app.models import User, Post
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 
-
+@app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """ Loggar in användaren """
@@ -56,7 +56,6 @@ def register():
     return render_template("register.html", title="Register", form=form)
 
 
-@app.route('/')
 @app.route("/user/<user_id>", methods=["GET", "POST"])
 @login_required
 def user(user_id):
