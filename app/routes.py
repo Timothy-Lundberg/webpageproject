@@ -79,11 +79,10 @@ def user(user_id):
         new_post = {
             'poster': poster.username,
             'body': post.body,
-            'avatar': poster,
-            'id': poster_id
+            'user': poster,
+            'id': poster_id,
         }
         post_list.append(new_post)
-
 
     form = PostForm()
     if form.validate_on_submit():
@@ -92,8 +91,6 @@ def user(user_id):
         db.session.commit()
         return redirect(url_for("user", user_id=user.id))
 
-    # joke = asyncio.run(print_joke())
-    joke = "What did hasudhadus....."
     return render_template("user.html", user=user, form=form, posts=post_list)
 
 
