@@ -4,16 +4,6 @@ from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm
 from app.models import User, Post
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
-from app.joke_api import print_joke
-import asyncio
-
-
-@app.route('/')
-@app.route('/index')
-# Login_required gör så att enbart inloggade personer kan se "index" sidan.
-@login_required
-def index():
-    return render_template("index.html", title="Home Page")
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -35,7 +25,7 @@ def login():
         # next_page sparas för att omredigera användaren vidare efter lyckad inloggning om det finns en next.
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('index')
+            next_page = url_for('user', user_id=current_user.id)
         return redirect(next_page)
     return render_template("login.html", title='Sign In', form=form)
 
@@ -44,7 +34,7 @@ def login():
 def logout():
     """ Loggar ut användaren """
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -52,7 +42,7 @@ def register():
     """ Registrerar användaren """
     # Om användaren är inloggad omdirigeras man till index.
     if current_user.is_authenticated:
-        return redirect(url_for("index"))
+        return redirect(url_for('user', user_id=current_user.id))
     form = RegistrationForm()
     # Om registreringen godkänns skapas en instans från User-klassen med information från vårat användarformulär
     if form.validate_on_submit():
@@ -66,13 +56,16 @@ def register():
     return render_template("register.html", title="Register", form=form)
 
 
+@app.route('/')
 @app.route("/user/<user_id>", methods=["GET", "POST"])
 @login_required
 def user(user_id):
+
     user = User.query.filter_by(id=user_id).first_or_404()
     posts = Post.query.filter_by(page=user.id).all()
-
+    profiles = User.query.all()
     post_list = []
+
     for post in posts:
         poster_id = post.user_id
         poster = User.query.filter_by(id=poster_id).first_or_404()
@@ -91,7 +84,7 @@ def user(user_id):
         db.session.commit()
         return redirect(url_for("user", user_id=user.id))
 
-    return render_template("user.html", user=user, form=form, posts=post_list)
+    return render_template("user.html", user=user, form=form, posts=post_list, profiles=profiles)
 
 
 @app.route('/edit_profile', methods=['GET', 'POST'])

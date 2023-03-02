@@ -1,46 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'bootstrap/base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    {% if title %}
-    <title>{{ title }} - Microblog</title>
-    {% else %}
-    <title>Welcome to Microblog!</title>
-    {% endif %}
-</head>
-<body>
-<div>
-    Webpage for random API's:
-    <a href="{{ url_for('index') }}">Home</a>
+{% block title %}
+    {% if title %}{{ title }} - MonsterSpace{% else %} MonsterSpace{% endif %}
+{% endblock %}
+
+
+{% block navbar %}
+    <link href="https://fonts.cdnfonts.com/css/spooky-nightmare" rel="stylesheet">
+    <nav class="navbar navbar-default">
+    <h4>
     {% if current_user.is_anonymous %}
     <a href="{{ url_for('login') }}">Login</a>
     {% else %}
     <a href="{{ url_for('user', user_id=current_user.id) }}">Profile</a>
     <a href="{{ url_for('logout') }}">Logout</a>
     {% endif %}
-</div>
+    </h4>
+    <center>
+    <h1 style="font-family: 'Spooky Nightmare'; font-size: 80px">MonsterSpace</h1>
+    </center>
+    <br><br>
 
-    <hr>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
+    </nav>
 
-    <table>
-        <tr>
-            <td>here we print our users</td>
-            <td>{% block content %}{% endblock %}</td>
-        </tr>
-    </table>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-info" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {% block app_content %}{% endblock %}
+    </div>
+{% endblock %}
 
 
 
-</body>
 
-</html>
+
+
+
+

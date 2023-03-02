@@ -45,5 +45,5 @@ class EditProfileForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
-    body = TextAreaField("Make a Joke", validators=[Length(min=2, max=140)])
-    submit = SubmitField('Post')
+    body = TextAreaField("Make a post", validators=[Length(min=2, max=1000)])
+    submit = SubmitField('Publish')

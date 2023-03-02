@@ -1,78 +1,95 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content %}
-<center>
-    <table>
-        <tr valign="top">
-            <td><img src="{{ user.avatar(128) }}"></td>
-            <td>
-                {% if user.about_me %}<p>{{ user.about_me }} </p>{% endif %}
-            </td>
-        </tr>
-    </table>
-    <h1>{{ user.username }}</h1>
-    {% if user == current_user %}
-    <p><a href="{{ url_for('edit_profile') }}">Edit your profile</a></p>
-    {% endif %}
+    <div class="row">
+        <div class="col-lg-1">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Monsters</h2>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for profile in profiles %}
+                    <a href="{{ url_for('user', user_id=profile.id) }}" style="color: black">
+                    <li class="list-group-item">{{ profile.username }}</li></a>
+                    {% endfor %}
+                </ul>
+                </div>
+        </div>
+        <br>
+        <div class="col-md-5">
+            <table class="table table" cellpadding="200">
+                <td><img src="{{ user.avatar(200) }}"></td>
+                <td>
+                    {% if user.about_me %}<h3>{{ user.about_me }}</h3> {% endif %}
+                </td>
 
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.body.label }}<br>
-            {{ form.body(cols=50, rows=4, id='body_field') }}<br>
-            {% for error in form.body.errors %}
-            <span style="color: red;">[{{ error }}]</span>
+            </table>
+            <h1>{{ user.username }}</h1>
+            {% if user == current_user %}
+            <p><a href="{{ url_for('edit_profile') }}">Edit your profile</a></p>
+            {% endif %}
+
+            <div class="row">
+                <div class="col-lg-12">
+                    {{ wtf.quick_form(form, id="body_field") }}
+                    <style>
+                        #body_field textarea {
+                            height: 112px;
+                        }
+                    </style>
+                    <br>
+                    <button onclick="generate_joke()">Get Joke</button>
+                    <button onclick="getCatFact()">Get Cat Fact</button>
+                </div>
+            </div>
+
+            <br>
+            <script>
+                function generate_joke() {
+                    fetch('https://v2.jokeapi.dev/joke/Any?blacklistFlags=racist,sexist')
+                        .then(response => response.json())
+                        .then(data => {
+                            var joke = data.joke || data.setup + ' ' + data.delivery;
+                            var textField = document.getElementById("body");
+                            textField.value = joke;
+                        })
+                        .catch(error => console.error(error));
+                }
+            </script>
+
+            <script>
+                function getCatFact() {
+                    fetch('https://catfact.ninja/fact')
+                        .then(response => response.json())
+                        .then(data => {
+                            var fact = data.fact;
+                            var textField = document.getElementById("body");
+                            textField.value = fact;
+                        })
+                        .catch(error => console.error(error));
+                }
+            </script>
+
+            {% if posts %}
+            {% for post in posts[::-1] %}
+            <table class="table table-hover">
+                <tr>
+                    <td width="70px">
+                        <a href="{{ url_for('user', user_id=post.id) }}">
+                            <img src="{{ post.user.avatar(44) }}" />
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('user', user_id=post.id) }}" style="color: black"><b>{{ post.poster }}:</b></a>
+                        <br>
+                        {{ post.body }}
+                    </td>
+                </tr>
             {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
-
-    </form>
-    <button onclick="generate_joke()">Generate Joke</button>
-    <button onclick="getCatFact()">Get Cat Fact</button>
-
-    <script>
-        function generate_joke() {
-            fetch('https://v2.jokeapi.dev/joke/Any?blacklistFlags=racist,sexist')
-                .then(response => response.json())
-                .then(data => {
-                    var joke = data.joke || data.setup + ' ' + data.delivery;
-                    var textField = document.getElementById("body_field");
-                    textField.value = joke;
-                })
-                .catch(error => console.error(error));
-        }
-    </script>
-
-
-    <script>
-        function getCatFact() {
-            fetch('https://catfact.ninja/fact')
-                .then(response => response.json())
-                .then(data => {
-                    var fact = data.fact;
-                    var textField = document.getElementById("body_field");
-                    textField.value = fact;
-                })
-                .catch(error => console.error(error));
-        }
-    </script>
-
-
-    {% if posts %}
-    {% for post in posts %}
-    <table>
-        <tr valign="top">
-            <td><a href="{{ url_for('user', user_id=post.id) }}"><img src="{{ post.user.avatar(36) }}"></a></td>
-            <td>{{ post.body }}</td>
-
-        </tr>
-        {% endfor %}
-    </table>
-    {% else %}
-    <h1>{{ user.username }} has NO posts yet!</h1>
-    {% endif %}
-
-
-</center>
-
+            </table>
+            {% endif %}
+        </div>
+        </center>
+    </div>
 {% endblock %}
