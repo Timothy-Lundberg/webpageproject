@@ -18,6 +18,8 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 # Sätter en standard sida där användaren behöver logga in. Aktiveras med @login_required i routes.
 login.login_view = 'login'
+# vi använder bootstrap för att snygga till våran hemsida
+bootstrap = Bootstrap(app)
 
 from app import routes, models
 
