@@ -62,7 +62,7 @@
     {% for post in posts %}
     <table>
         <tr valign="top">
-            <td><a href="{{ url_for('user', user_id=post.id) }}"><img src="{{ post.avatar.avatar(36) }}"></a></td>
+            <td><a href="{{ url_for('user', user_id=post.id) }}"><img src="{{ post.user.avatar(36) }}"></a></td>
             <td>{{ post.body }}</td>
 
         </tr>
