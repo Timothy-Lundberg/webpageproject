@@ -26,7 +26,15 @@ jobs:
         run: docker compose build
       -
         name: Compose push
-        run: docker compose push
+        run: docker compose push  
+#       - 
+#         name: Build and push
+#         uses: docker/build-push-action@v4
+#         with:
+#           context: .
+#           file: ./dockerfile
+#           push: true
+#           tags: ${{ secrets.DOCKERHUB_USERNAME }}/monsterspace:latest
 
   deploy:
     needs: build
@@ -52,10 +60,4 @@ jobs:
 
 
      
-      - name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./dockerfile
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/monsterspace:latest
+      
