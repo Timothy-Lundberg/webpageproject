@@ -13,7 +13,7 @@ services:
           - timlun/monsterspace:latest
     image: timlun/monsterspace
     ports:
-      - 5000:5000  # Which ports should we expose?
+      - 5000:80  # Which ports should we expose?
     environment:
       FLASK_DEBUG: true  # Tell Flask to run in debug mode
 
