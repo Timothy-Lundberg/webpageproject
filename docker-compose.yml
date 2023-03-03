@@ -1,4 +1,6 @@
+
 # docker-compose.yml
+
 
 # Usage: docker-compose up -d
 
@@ -17,12 +19,12 @@ services:
     environment:
       FLASK_DEBUG: true  # Tell Flask to run in debug mode
 
-#  db:
-#    image: mysql:latest
-#    restart: always
-#    environment:
-#      MYSQL_ROOT_PASSWORD: example
-#    ports:
-#      - 3306:3306
-#    volumes:
-#      - "./.database:/var/lib/mysql"   # lokala mappen : mappen i containern
+  db:
+    image: SQLite:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'you-will-never-guess'
+    ports:
+      - 3306:3306
+    volumes:
+      - "./.database:/app/app.db"   # lokala mappen : mappen i containern
