@@ -10,8 +10,8 @@ services:
     build:
         dockerfile: dockerfile  # Build the image from the file "Dockerfile"
         tags:  # How should we name the images?
-          - jacobwessmark/monsterspace:latest
-    image: jacobwessmark/monsterspace
+          - timlun/monsterspace:latest
+    image: timlun/monsterspace
     ports:
       - 5000:5000  # Which ports should we expose?
     environment:
