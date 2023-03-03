@@ -1,0 +1,28 @@
+# docker-compose.yml
+
+# Usage: docker-compose up -d
+
+services:
+  web:
+    # depends_on:
+      # - db  # Make sure the db service is working first
+    restart: on-failure:4  # If the container crashes, try restarting it 4 times
+    build:
+        dockerfile: dockerfile  # Build the image from the file "Dockerfile"
+        tags:  # How should we name the images?
+          - jacobwessmark/monsterspace:latest
+    image: jacobwessmark/monsterspace
+    ports:
+      - 5000:5000  # Which ports should we expose?
+    environment:
+      FLASK_DEBUG: true  # Tell Flask to run in debug mode
+
+#  db:
+#    image: mysql:latest
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: example
+#    ports:
+#      - 3306:3306
+#    volumes:
+#      - "./.database:/var/lib/mysql"   # lokala mappen : mappen i containern

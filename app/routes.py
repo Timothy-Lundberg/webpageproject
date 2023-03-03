@@ -17,7 +17,7 @@ def login():
     """ Loggar in användaren """
     # Om användaren är inloggad omdirigeras man till index.
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for("user", user_id=current_user.id))
     # Om användaren inte är inloggad.
     form = LoginForm()
     # Här kollar man fall inloggning blivit godkänd.
@@ -58,7 +58,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Congratulations, you are now a proud member of MonsterSpace')
-        return redirect(url_for("index"))
+        return redirect(url_for("login"))
     return render_template("register.html", title="Register", form=form)
 
 
