@@ -47,7 +47,7 @@ jobs:
           resource-group: MonsterSpace
           dns-name-label: monsterspace
           image: docker.io/timlun/monsterspace
-          name: MonsterSpace
+          name: monsterspace
           location: 'north europe'
 
 
