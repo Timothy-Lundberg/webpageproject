@@ -39,11 +39,13 @@ class RegistrationForm(FlaskForm):
 
 
 class EditProfileForm(FlaskForm):
+    """ Skapar en mall som används för att uppdatera ens profil uppgifter """
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     about_me = TextAreaField('About me', validators=[Length(min=0, max=140)])
     submit = SubmitField('Submit')
 
 
 class PostForm(FlaskForm):
+    """ Skapar en mall som används för att göra Posts """
     body = TextAreaField("Make a post", validators=[Length(min=2, max=1000)])
     submit = SubmitField('Publish')

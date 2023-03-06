@@ -19,12 +19,13 @@ services:
     environment:
       FLASK_DEBUG: true  # Tell Flask to run in debug mode
 
-  db:
-    image: SQLite:latest
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: 'you-will-never-guess'
-    ports:
-      - 3306:3306
-    volumes:
-      - "./.database:/app/app.db"   # lokala mappen : mappen i containern
+# Ett misslyckat försök att skapa en databas som sparas vid varje server restart.
+#  db:
+#    image: SQLite:latest
+#    restart: always
+#    environment:
+#      MYSQL_ROOT_PASSWORD: 'you-will-never-guess'
+#    ports:
+#      - 3306:3306
+#    volumes:
+#      - "./.database:/app/app.db"   # lokala mappen : mappen i containern
